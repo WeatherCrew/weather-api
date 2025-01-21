@@ -47,7 +47,7 @@ jobs:
       with:
         registry: https://ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.MY_PAT }}
+        password: ${{ secrets.KIMI_PAT }}
 
     # 3. Docker-Image bauen und pushen
     - name: Build and push Docker image
