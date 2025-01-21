@@ -55,4 +55,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: ghcr.io/kimifritz/djangotest:latest
+        tags: ghcr.io/weathercrew/weather-app:latest
