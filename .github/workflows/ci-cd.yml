@@ -11,19 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Repository auschecken
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
+    # 2. Python einrichten
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
 
+    # 3. Abhängigkeiten installieren
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    # 4. Tests ausführen
     - name: Run tests
       run: |
         python manage.py test
@@ -33,21 +37,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Repository auschecken
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Log in to GitHub Container Registry
+    # 2. Login zu DockerHub
+    - name: Log in to DockerHub
       uses: docker/login-action@v3
       with:
         registry: https://ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.KIMI_PAT }}
 
+    # 3. Docker-Image bauen und pushen
     - name: Build and push Docker image
       uses: docker/build-push-action@v6
       with:
         context: .
         push: true
-        tags: |
-          ghcr.io/weathercrew/weather-app:latest
-          ghcr.io/weathercrew/weather-app:${{ github.sha }}
+        tags: ghcr.io/kimifritz/djangotest:latest
