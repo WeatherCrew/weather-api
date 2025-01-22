@@ -1,7 +1,4 @@
-import os
-import requests
 from weather_api.utils.distance_calculation import haversine
-import csv
 
 """
 
