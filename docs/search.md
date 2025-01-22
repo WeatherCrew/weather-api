@@ -8,4 +8,4 @@ The search is used to find weather stations for a given location. The search is 
 
 ## How the API works
 
-![Search API](docs/images/search.png)
+![Search API](images/search.png)
