@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-8_6cs400l%xdr(a56i^3!o%e2=4p*f0_3t_c-%toajch&+^%nf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    '*', #alle hosts sind erlaubt
+]
+# Allow all origins (for development purposes)
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -39,10 +42,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'weather_api',
     'rest_framework',
+     'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
