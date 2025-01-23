@@ -2,7 +2,7 @@
 
 ---
 
-This Weather API searches for weather stations for a given location and returns the weather data for the closest station.
+This Weather API searches for weather stations for a given location and returns weather data for a chosen station.
 The API is built using Python, Django and Django Rest Framework.
 
 ---
