@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from weather_api.utils.stations_file_loader import load_stations, filter_stations, parse_inventory_file
+from weather_api.utils.stations_file_loader import stations_cache, filter_stations
 
 
 class StationSearchView(APIView):
@@ -12,8 +12,11 @@ class StationSearchView(APIView):
         radius = float(request.query_params.get("radius"))
         max_results = int(request.query_params.get("max_results"))
 
-        stations = load_stations("weather_api/data/ghcnd-stations.csv")
-        inventory = parse_inventory_file("weather_api/data/ghcnd-inventory.txt")
+        stations = stations_cache["stations"]
+        inventory = stations_cache["inventory"]
+
+        if not stations or not inventory:
+            return Response({"error": "Stations data not loaded"}, status=500)
 
         results = filter_stations(stations, latitude, longitude, radius, max_results, inventory)
 

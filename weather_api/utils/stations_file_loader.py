@@ -1,5 +1,19 @@
 from weather_api.utils.distance_calculation import haversine
 
+# global data structure
+
+stations_cache = {
+    "stations": None,
+    "inventory": None
+}
+
+def initialize_station_data():
+    global stations_cache
+    stations_cache["stations"] = load_stations("weather_api/data/ghcnd-stations.csv")
+    stations_cache["inventory"] = parse_inventory_file("weather_api/data/ghcnd-inventory.txt")
+    print("Station data initialized")
+
+
 """
 
 csv file is currently available in the repo
