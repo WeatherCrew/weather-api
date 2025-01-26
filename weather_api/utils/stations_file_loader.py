@@ -1,4 +1,4 @@
-from weather_api.utils.distance_calculation import haversine
+from weather_api.utils.stations_distance_calculation import haversine
 
 # global data structure
 

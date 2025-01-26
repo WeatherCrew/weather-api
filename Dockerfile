@@ -1,5 +1,5 @@
 # Install Python (there lighter images which can be found on docker hub - e. g. python:3.11-alpine)
-FROM python:3.11
+FROM python:3.12-alpine
 
 # Prevents Django from writing .pyc files inside the container (they are not necessary)
 ENV PYTHONDONTWRITEBYTECODE=1
