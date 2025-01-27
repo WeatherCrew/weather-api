@@ -150,7 +150,7 @@ Eine .dly-Datei enthält Daten einer Wetterstation, wobei jede Zeile einen Monat
 Für die Anforderungen des Kunden sind die Minimal- und Maximaltemperaturen (`TMIN`, `TMAX`) relevant.
 
 Beispielhaft sieht eine Zeile aus dem Datensatz wie folgt aus:
-`GME00129502 200211 TMAX  142  E  103  E  147  E   81  E   72  E   81  E   43  E   48  E   81  E   56  E  107  E  100  E  100  E   80  E   82  E   89  E  114  E   62  E   61  E   72  E   89  E   56  E   70  E   89  E   85  E   67  E   66  E   72  E   78  E   68  E-9999
+`GME00129502 200211 TMAX  142  E  103  E  147  E   81  E   72  E   81  E   43  E   48  E   81  E   56  E  107  E  100  E  100  E   80  E   82  E   89  E  114  E   62  E   61  E   72  E   89  E   56  E   70  E   89  E   85  E   67  E   66  E   72  E   78  E   68  E-9999`
 
 - GME00129502: Stations-ID
 - 200211: Jahr und Monat: 2002, November
