@@ -42,8 +42,20 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'weather_api',
     'rest_framework',
-     'corsheaders',
+    'corsheaders',
+    'drf_spectacular'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Weather API',
+    'DESCRIPTION': 'API for weather data',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

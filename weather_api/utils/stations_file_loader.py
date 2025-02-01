@@ -16,7 +16,7 @@ def initialize_station_data():
 
 """
 
-csv file is currently available in the repo
+csv file is currently available in the repo because download is to slow (aprroxiamtely 180 seconds)
 
 def download_stations_csv(url, output_path="weather/data/ghcnd-stations.csv"):
     # Kommentar fehlt noch

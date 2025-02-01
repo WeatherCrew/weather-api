@@ -3,3 +3,6 @@ djangorestframework>=3.14
 django-cors-headers
 requests
 pandas
+drf-spectacular
+pytest
+pytest-django
