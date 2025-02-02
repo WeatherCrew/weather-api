@@ -25,9 +25,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run tests
+    - name: Run tests with pytest (not django tests)
       run: |
-        python manage.py test
+        pytest --maxfail=5 --disable-warnings
 
   docker-build-and-push:
     needs: build-and-test
