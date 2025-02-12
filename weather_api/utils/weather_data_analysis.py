@@ -1,66 +1,74 @@
-import pandas as pd
-
 def calculate_annual_means(data, start_year, end_year):
-    # Kommentar fehlt noch
+    """
+    Docstring noch hinzufügen
+    """
 
-    data_filtered = data[
-        (data["ELEMENT"].isin(["TMIN", "TMAX"])) &
-        (data["YEAR"] >= start_year) &
-        (data["YEAR"] <= end_year)
-    ]
+    data_filtered = data[(data["YEAR"] >= start_year) & (data["YEAR"] <= end_year)]
 
-    melted = data_filtered.melt(
-        id_vars=["YEAR", "MONTH", "ELEMENT"],
-        value_vars=[f"DAY_{i}" for i in range(1, 32)],
-        var_name="DAY",
-        value_name="VALUE"
-    ).dropna(subset=["VALUE"])
-
-    melted["VALUE"] = melted["VALUE"] / 10.0
-
-    annual_means = melted.groupby(["YEAR", "ELEMENT"])["VALUE"].mean().unstack()
-    return annual_means.reset_index()
-
-
-def calculate_seasonal_means(data, start_year, end_year):
-    # Kommentar fehlt noch
-    seasons = {
-        "spring": [3, 4, 5],
-        "summer": [6, 7, 8],
-        "autumn": [9, 10, 11],
-        "winter": [12, 1, 2]
-    }
-
-    data_filtered = data[
-        (data["ELEMENT"].isin(["TMIN", "TMAX"])) &
-        (data["YEAR"] >= start_year - 1) &
-        (data["YEAR"] <= end_year + 1)
-    ]
-
-    data_filtered.loc[data_filtered["MONTH"] == 12, "YEAR"] += 1
 
     melted = data_filtered.melt(
         id_vars=["ID", "YEAR", "MONTH", "ELEMENT"],
         value_vars=[f"DAY_{i}" for i in range(1, 32)],
         var_name="DAY",
         value_name="VALUE"
-    ).dropna(subset=["VALUE"])
+    )
+
+    # Entfernt Zeilen ohne gültigen Messwert
+    melted = melted.dropna(subset=["VALUE"])
 
     melted["VALUE"] = melted["VALUE"] / 10.0
 
-    seasonal_means = []
-    for season, months in seasons.items():
-        season_data = melted[melted["MONTH"].isin(months)]
+    annual_means = melted.groupby(["YEAR", "ELEMENT"])["VALUE"].mean().unstack()
 
-        available_years = season_data["YEAR"].unique()
-        relevant_years = range(start_year, end_year + 1)
+    annual_means = annual_means.reset_index()
 
-        for year in relevant_years:
-            if year not in available_years:
-                continue
-            mean_values = season_data[season_data["YEAR"] == year].groupby("ELEMENT")["VALUE"].mean().to_frame().T
-            mean_values["YEAR"] = year
-            mean_values["SEASON"] = season
-            seasonal_means.append(mean_values)
+    return annual_means
 
-    return pd.concat(seasonal_means).reset_index(drop=True)
+
+import pandas as pd
+
+def calculate_seasonal_means(data, start_year, end_year):
+    """
+    Docstring noch hinzufügen
+    """
+    # Dezember des Vorjahres (start_year-1) für den Winter berücksichtigen
+    data_filtered = data[(data["YEAR"] >= (start_year - 1)) & (data["YEAR"] <= end_year)]
+
+    melted = data_filtered.melt(
+        id_vars=["ID", "YEAR", "MONTH", "ELEMENT"],
+        value_vars=[f"DAY_{i}" for i in range(1, 32)],
+        var_name="DAY",
+        value_name="VALUE"
+    )
+
+    melted = melted.dropna(subset=["VALUE"])
+
+    melted["VALUE"] = melted["VALUE"] / 10.0
+
+    # Funktion extra?
+    def assign_season(row):
+        month = row["MONTH"]
+        year = row["YEAR"]
+        if month in [3, 4, 5]:
+            return year, "spring"
+        elif month in [6, 7, 8]:
+            return year, "summer"
+        elif month in [9, 10, 11]:
+            return year, "autumn"
+        elif month == 12:
+            # Dezember gehört zum Winter des Folgejahres
+            return year + 1, "winter"
+        elif month in [1, 2]:
+            return year, "winter"
+        else:
+            return year, None
+
+    melted[["season_year", "season"]] = melted.apply(lambda row: pd.Series(assign_season(row)), axis=1)
+
+    melted = melted[(melted["season_year"] >= start_year) & (melted["season_year"] <= end_year)]
+
+    seasonal_means = melted.groupby(["season_year", "season", "ELEMENT"])["VALUE"].mean().unstack()
+
+    seasonal_means = seasonal_means.reset_index().rename(columns={"season_year": "YEAR"})
+
+    return seasonal_means
