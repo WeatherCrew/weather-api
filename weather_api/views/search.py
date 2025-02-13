@@ -14,22 +14,30 @@ class StationSearchView(APIView):
             OpenApiParameter(name="longitude", description="Longitude", required=True, type=float),
             OpenApiParameter(name="radius", description="Search radius in km", required=True, type=float),
             OpenApiParameter(name="max_results", description="Maximum number of results", required=True, type=int),
+            OpenApiParameter(name="start_year", description="Start year of data availability", required=True, type=int),
+            OpenApiParameter(name="end_year", description="End year of data availability", required=True, type=int),
         ],
         responses={200: "List of weather stations"},
     )
 
     def get(self, request):
-        latitude = float(request.query_params.get("latitude"))
-        longitude = float(request.query_params.get("longitude"))
-        radius = float(request.query_params.get("radius"))
-        max_results = int(request.query_params.get("max_results"))
+        try:
+            latitude = float(request.query_params.get("latitude"))
+            longitude = float(request.query_params.get("longitude"))
+            radius = float(request.query_params.get("radius"))
+            max_results = int(request.query_params.get("max_results"))
+            start_year = int(request.query_params.get("start_year"))
+            end_year = int(request.query_params.get("end_year"))
 
-        stations = stations_cache["stations"]
-        inventory = stations_cache["inventory"]
+            stations = stations_cache["stations"]
+            inventory = stations_cache["inventory"]
 
-        if not stations or not inventory:
-            return Response({"error": "Stations data not loaded"}, status=500)
+            if not stations or not inventory:
+                return Response({"error": "Stations data not loaded"}, status=500)
 
-        results = filter_stations(stations, latitude, longitude, radius, max_results, inventory)
+            results = filter_stations(stations, latitude, longitude, radius, max_results, inventory, start_year, end_year)
 
-        return Response(results)
+            return Response(results)
+
+        except (TypeError, ValueError):
+            return Response({"error": "Invalid parameters"}, status=400)

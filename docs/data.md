@@ -8,12 +8,16 @@ und andererseits Wetterdaten (insbesondere Temperaturen) benötigt. Im Folgenden
 
 ## Stationsdaten
 
-Der Benutzer der Wetter-App gibt folgende Daten ein: Geografische Länge, Breite, einen Suchradius und die maximale Anzahl der Stationen, die angezeigt werden sollen.
-Basierend darauf sollen die Wetterstationen gefunden werden, die sich innerhalb des angegebenen Radius um den Standort des Benutzers befinden.
+Der Benutzer der Wetter-App gibt folgende Daten ein: Geografische Länge; Geografische Breite; Suchradius; Maximale Anzahl der Stationen, die angezeigt werden sollen; Startjahr; Endjahr.
+Basierend darauf sollen die Wetterstationen gefunden werden, die sich innerhalb des angegebenen Radius um den Standort befinden und für die Daten innerhalb des angegebenen Zeitraums verfügbar sind.
 
 Der Benutzer möchte pro gefundener Station folgende Daten angezeigt bekommen:
 - Name
-- ... (muss noch durch den Kunden spezifiziert werden)
+- Stations-ID
+- Längengrad
+- Breitengrad
+- Diszanz zur angegebenen Position
+- Zeitraum für den Wetterdaten verfügbar sind (Start- und Endjahr)
 
 Grundsätzlich enthalten die folgenden, in der Datenquelle verfügbaren Dateien, Informationen zu Wetterstationen:
 - `ghcnd-inventory.txt`
@@ -92,8 +96,7 @@ Daher ist zusätzlich die Datei `ghcnd-inventory.txt` notwendig.
 ### ghcnd-inventory.txt
 
 Die Datei enthält wie die Datei `ghcnd-stations.txt/csv` Informationen zu Wetterstationen, wie z. B. die ID, Länge und Breite.
-Die Datei enthält ebenfalls Informationen zu Wetterstationen, wie z. B. die ID, Länge und Breite. Zusätzlich enthält sie 
-Informationen über den Zeitraum, für den Wetterdaten verfügbar sind. Diese Informationen sind **nur** in dieser Datei verfügbar.
+Zusätzlich enthält sie Informationen über den Zeitraum, für den Wetterdaten verfügbar sind. Diese Informationen sind **nur** in dieser Datei verfügbar.
 
 Die Datei enthält folgende Informationen zu den Wetterstationen:
 

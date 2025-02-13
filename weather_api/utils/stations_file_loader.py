@@ -1,7 +1,7 @@
+import copy
 from weather_api.utils.stations_distance_calculation import haversine
 
 # global data structure
-
 stations_cache = {
     "stations": None,
     "inventory": None
@@ -98,11 +98,48 @@ def get_common_availability(inventory, station_id):
     return default_availability
 
 
-def filter_stations(stations, latitude, longitude, radius, max_results, inventory):
+def filter_stations(stations, latitude, longitude, radius, max_results, inventory, requested_start_year, requested_end_year):
     results = []
     for station in stations:
         distance = haversine(latitude, longitude, station["latitude"], station["longitude"])
         if distance <= radius:
+            availability = get_common_availability(inventory, station["station_id"])
+            if availability["first_year"] and availability["last_year"]:
+                if availability["first_year"] <= requested_start_year and availability["last_year"] >= requested_end_year:
+                    # Neues Dictionary basierend auf Original, ohne Original zu verändern
+                    result_entry = {
+                        **station,  # kopiert alle Werte aus Original
+                        "distance": round(distance, 2),
+                        "data_availability": availability
+                    }
+                    results.append(result_entry)
+    return sorted(results, key=lambda x: x["distance"])[:max_results]
+
+
+"""
+old version with deepcopy --> unnecessary
+
+def filter_stations(stations, latitude, longitude, radius, max_results, inventory, requested_start_year, requested_end_year):
+    # verändern, sodass nicht immer eine deepcopy gemacht wird
+    results = []
+    for station in stations:
+        distance = haversine(latitude, longitude, station["latitude"], station["longitude"])
+        if distance <= radius:
+            availability = get_common_availability(inventory, station["station_id"])
+
+            if availability["first_year"] and availability["last_year"]:
+                if availability["first_year"] <= requested_start_year and availability["last_year"] >= requested_end_year:
+                    station_copy = copy.deepcopy(station)
+                    station_copy["distance"] = round(distance, 2)
+                    station_copy["data_availability"] = availability
+                    results.append(station_copy)
+
+    return sorted(results, key=lambda x: x["distance"])[:max_results]
+"""
+
+"""
+            old version
+            
             station["distance"] = round(distance, 2)
 
             # Datenverfügbarkeit prüfen
@@ -110,5 +147,7 @@ def filter_stations(stations, latitude, longitude, radius, max_results, inventor
             station["data_availability"] = availability
 
             results.append(station)
+            
 
     return sorted(results, key=lambda x: x["distance"])[:max_results]
+"""
