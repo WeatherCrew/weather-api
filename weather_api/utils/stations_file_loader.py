@@ -24,7 +24,7 @@ def download_stations_csv(url, output_path="weather/data/ghcnd-stations.csv"):
     if response.status_code == 200:
         with open(output_path, "wb") as file:
             file.write(response.content)
-        print (f"File downloaded: {output_path}")
+        print (f"File downloaded: {output_path}") 
     else:
         raise Exception(f"Download failed: {response.status_code}")
         
@@ -49,7 +49,8 @@ def load_stations(file_path="weather_api/data/ghcnd-stations.csv"):
                     "station_id": station_id,
                     "latitude": latitude,
                     "longitude": longitude,
-                    "name": name
+                    "name": name,
+                    "hemisphere": "N" if latitude >= 0 else "S"
                 })
     except FileNotFoundError:
         print("File not found")

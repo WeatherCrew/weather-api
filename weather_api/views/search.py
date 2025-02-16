@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter
-from weather_api.utils.stations_file_loader import stations_cache, filter_stations
+from weather_api.utils.stations_file_loader_simple import stations_cache, filter_stations
 
 
 class StationSearchView(APIView):
@@ -29,13 +29,22 @@ class StationSearchView(APIView):
             start_year = int(request.query_params.get("start_year"))
             end_year = int(request.query_params.get("end_year"))
 
+            """
             stations = stations_cache["stations"]
             inventory = stations_cache["inventory"]
-
+            
+            
+            
             if not stations or not inventory:
                 return Response({"error": "Stations data not loaded"}, status=500)
+            """
 
-            results = filter_stations(stations, latitude, longitude, radius, max_results, inventory, start_year, end_year)
+            stations = stations_cache["stations"]
+
+            if not stations:
+                return Response({"error": "Stations data not loaded"}, status=500)
+
+            results = filter_stations(stations, latitude, longitude, radius, max_results, start_year, end_year)
 
             return Response(results)
 

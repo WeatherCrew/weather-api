@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from weather_api.utils.stations_file_loader import initialize_station_data
+from weather_api.utils.stations_file_loader_simple import initialize_station_data
 
 
 class WeatherApiConfig(AppConfig):

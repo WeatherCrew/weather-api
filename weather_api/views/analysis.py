@@ -61,7 +61,6 @@ class StationAnalysisView(APIView):
         },
     )
     def get(self, request):
-        # Parameter aus den Query-Parametern abrufen
         station_id = request.query_params.get("station_id")
         start_year = request.query_params.get("start_year")
         end_year = request.query_params.get("end_year")
@@ -76,19 +75,13 @@ class StationAnalysisView(APIView):
             return Response({"error": "start_year and end_year must be integers"}, status=400)
 
         try:
-            # Download der Rohdaten
             file_content = download_dly_file(station_id)
-            # Parsen der Daten
             parsed_data = parse_dly_file(file_content)
-            # Berechnung der jährlichen Mittelwerte
             annual = calculate_annual_means(parsed_data, start_year, end_year)
-            # Berechnung der saisonalen Mittelwerte
             seasonal = calculate_seasonal_means(parsed_data, start_year, end_year)
 
-            # Konvertiere die Ergebnisse in ein Dictionary-Format für die JSON-Antwort
             annual_list = annual.to_dict(orient="records")
             seasonal_list = seasonal.to_dict(orient="records")
-
 
             # Diese Funktionalität noch in eine extra Funktion schreiben (zur Übersichtlichkeit)
             years_dict = {}

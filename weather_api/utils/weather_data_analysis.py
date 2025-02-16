@@ -1,10 +1,11 @@
+import pandas as pd
+
 def calculate_annual_means(data, start_year, end_year):
     """
     Docstring noch hinzufügen
     """
 
     data_filtered = data[(data["YEAR"] >= start_year) & (data["YEAR"] <= end_year)]
-
 
     melted = data_filtered.melt(
         id_vars=["ID", "YEAR", "MONTH", "ELEMENT"],
@@ -24,8 +25,6 @@ def calculate_annual_means(data, start_year, end_year):
 
     return annual_means
 
-
-import pandas as pd
 
 def calculate_seasonal_means(data, start_year, end_year):
     """
