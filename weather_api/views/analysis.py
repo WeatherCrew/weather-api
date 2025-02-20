@@ -4,6 +4,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from weather_api.utils.weather_data_downloader import download_dly_file
 from weather_api.utils.weather_data_parser import parse_dly_file
 from weather_api.utils.weather_data_analysis import calculate_annual_means, calculate_seasonal_means
+from weather_api.utils.stations_file_loader_simple import stations_cache
 
 
 class StationAnalysisView(APIView):
@@ -68,6 +69,8 @@ class StationAnalysisView(APIView):
         if not station_id or not start_year or not end_year:
             return Response({"error": "Missing parameter(s)"}, status=400)
 
+        # prüfen, ob start_year < end_year??
+
         try:
             start_year = int(start_year)
             end_year = int(end_year)
@@ -77,8 +80,14 @@ class StationAnalysisView(APIView):
         try:
             file_content = download_dly_file(station_id)
             parsed_data = parse_dly_file(file_content)
+
+            stations_data = stations_cache["stations"].get(station_id)
+            if stations_data is None:
+                return Response({"error": "Station not found"}, status=404)
+            hemisphere = stations_data.get("hemisphere")
+
             annual = calculate_annual_means(parsed_data, start_year, end_year)
-            seasonal = calculate_seasonal_means(parsed_data, start_year, end_year)
+            seasonal = calculate_seasonal_means(parsed_data, start_year, end_year, hemisphere)
 
             annual_list = annual.to_dict(orient="records")
             seasonal_list = seasonal.to_dict(orient="records")
@@ -117,3 +126,4 @@ class StationAnalysisView(APIView):
             return Response({"error": str(te)}, status=504)
         except Exception as e:
             return Response({"error": str(e)}, status=500)
+

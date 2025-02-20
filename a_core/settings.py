@@ -55,6 +55,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'API for weather data',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    'SORT_OPERATION_PARAMETERS': False,
 }
 
 MIDDLEWARE = [

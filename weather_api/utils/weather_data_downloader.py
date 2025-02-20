@@ -34,3 +34,7 @@ def download_dly_file(station_id):
         raise TimeoutError(f"Timeout: Download of file from {file_url} took more then 5 seconds.")
     except Exception as e:
         raise RuntimeError(f"Failed to download file from {file_url}: {e}")
+
+
+if __name__ == "__main__":
+    print(download_dly_file("ASN00001000"))

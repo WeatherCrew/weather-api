@@ -17,7 +17,23 @@ class StationSearchView(APIView):
             OpenApiParameter(name="start_year", description="Start year of data availability", required=True, type=int),
             OpenApiParameter(name="end_year", description="End year of data availability", required=True, type=int),
         ],
-        responses={200: "List of weather stations"},
+        responses={
+            200: {
+                "description": "List of weather stations",
+                "examples": {
+                    "application/json": [
+                        {
+                            "station_id": "GME00129502",
+                            "name": "BERLIN-DAHLEM",
+                            "latitude": 48.0092,
+                            "longitude": 8.8189,
+                            "distance": 1.23,
+                            "data_availability": {"first_year": 1991, "last_year": 2003}
+                        }
+                    ]
+                }
+            }
+        }
     )
 
     def get(self, request):
