@@ -1,3 +1,4 @@
+import pandas as pd
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter
@@ -88,6 +89,10 @@ class StationAnalysisView(APIView):
 
             annual = calculate_annual_means(parsed_data, start_year, end_year)
             seasonal = calculate_seasonal_means(parsed_data, start_year, end_year, hemisphere)
+
+            # replace nan with None, because JSON does not support NaN (is there another way to directly fix it? Use None instead of NaN?)
+            annual = annual.replace({pd.NA: None, float('nan'): None})
+            seasonal = seasonal.replace({pd.NA: None, float('nan'): None})
 
             annual_list = annual.to_dict(orient="records")
             seasonal_list = seasonal.to_dict(orient="records")
