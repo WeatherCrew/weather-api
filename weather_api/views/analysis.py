@@ -6,7 +6,7 @@ from weather_api.utils.weather_data_downloader import download_dly_file
 from weather_api.utils.weather_data_parser import parse_dly_file
 from weather_api.utils.weather_data_analysis import calculate_annual_means, calculate_seasonal_means
 from weather_api.utils.stations_file_loader_simple import stations_cache
-
+from weather_api.utils.response_builder import build_weather_data_response
 
 class StationAnalysisView(APIView):
     # Noch Prüfung einbauen, dass end_year > start_year -> dann Fehlermeldung
@@ -41,7 +41,7 @@ class StationAnalysisView(APIView):
         ],
         responses={
             200: {
-                "description": "Erfolgreiche Antwort mit den berechneten Jahres- und Saisonwerten.",
+                "description": "Successfully retrieved and analysed weather data.",
                 "content": {
                     "application/json": {
                         "example": {
@@ -97,38 +97,13 @@ class StationAnalysisView(APIView):
             annual_list = annual.to_dict(orient="records")
             seasonal_list = seasonal.to_dict(orient="records")
 
-            # Diese Funktionalität noch in eine extra Funktion schreiben (zur Übersichtlichkeit)
-            years_dict = {}
-
-            for row in annual_list:
-                year = row["YEAR"]
-                years_dict[year] = {
-                    "year": year,
-                    "annual_means": {
-                        "tmin": row["TMIN"],
-                        "tmax": row["TMAX"]
-                    },
-                    "seasonal_means": {}
-                }
-
-            for row in seasonal_list:
-                year = row["YEAR"]
-                season = row["season"]
-                if year in years_dict:
-                    years_dict[year]["seasonal_means"][season] = {
-                        "tmin": row["TMIN"],
-                        "tmax": row["TMAX"]
-                    }
-            years = [years_dict[y] for y in sorted(years_dict)]
-
-            response_data = {
-                "years": years
-            }
+            # runden auf eine Nachkommastelle?
+            response_data = build_weather_data_response(annual_list, seasonal_list)
 
             return Response(response_data)
+
 
         except TimeoutError as te:
             return Response({"error": str(te)}, status=504)
         except Exception as e:
             return Response({"error": str(e)}, status=500)
-

@@ -1,13 +1,14 @@
 import pandas as pd
 
 def calculate_annual_means(data, start_year, end_year):
-    """
+    """"
     Docstring noch hinzufügen
 
     Muss hier dann auch der Dezember des Vorjahres eingebunden werden?
     """
 
     data_filtered = data[(data["YEAR"] >= start_year) & (data["YEAR"] <= end_year)]
+
 
     melted = data_filtered.melt(
         id_vars=["ID", "YEAR", "MONTH", "ELEMENT"],
@@ -56,8 +57,9 @@ def assign_season(row, hemisphere):
             return year, "winter"
     return year, None
 
+
 def calculate_seasonal_means(data, start_year, end_year, hemisphere):
-    """
+    """"
     Docstring noch hinzufügen
     """
     # Dezember des Vorjahres (start_year-1) für den Winter berücksichtigen
