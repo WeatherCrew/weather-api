@@ -1,5 +1,5 @@
 from django.apps import AppConfig
-from weather_api.utils.stations_file_loader_simple import initialize_station_data
+from weather_api.utils.stations_loader import initialize_station_data, stations_cache
 
 
 class WeatherApiConfig(AppConfig):
@@ -7,4 +7,11 @@ class WeatherApiConfig(AppConfig):
     name = 'weather_api'
 
     def ready(self):
-        initialize_station_data()
+        """Load weather station data on application startup.
+
+        Calls `initialize_station_data()`to load and cache station data when the Django application starts.
+
+        Returns:
+            None
+        """
+        stations_cache.update(initialize_station_data())

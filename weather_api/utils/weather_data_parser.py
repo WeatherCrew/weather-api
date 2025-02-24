@@ -1,39 +1,42 @@
+"""Module for parsing weather data from .dly files.
+
+Provides a function to parse weather data from .dly files and extract TMIN and TMAX records into a DataFrame.
+"""
+
 import pandas as pd
 
 def parse_dly_file(file_content):
+    """Parse the content of a .dly file to extract TMIN adn TMAX records.
+
+    Processes the file content line by line, extracting station ID, year, month and daily values for TMIN and TMAX.
+    Each record includes:
+        - ID: Station ID (characters 1-11).
+        - YEAR: Year (characters 12-15).
+        - MONTH: Month (characters 16-17).
+        - ELEMENT: Measurement type (TMIN and TMAX, characters 18-21).
+        - DAY_1 to DAY_31: Daily values (5 characters per day, starting at character 22).
+
+    Missing values (e.g. -9999) are stored as None.
+
+    Args:
+        file_content (str): Content of the .dly file as a string.
+
+    Returns:
+        pd.DataFrame: DataFrame with columns ["ID", "YEAR", "MONTH", "ELEMENT", "DAY_1", ..., "DAY_31"].
     """
-        Parst den Inhalt einer .dly-Datei und extrahiert nur die Datensätze für TMIN und TMAX.
-
-        Jeder Datensatz enthält:
-          - ID: Stations-ID (Zeichen 1-11)
-          - YEAR: Jahr (Zeichen 12-15)
-          - MONTH: Monat (Zeichen 16-17)
-          - ELEMENT: Messgröße (TMIN oder TMAX, Zeichen 18-21)
-          - DAY_1 bis DAY_31: Tageswerte (je 5 Zeichen pro Tag, beginnend bei Spalte 22)
-
-        Fehlende Werte (z. B. "-9999") werden als None gespeichert.
-
-        Args:
-            file_content (str): Inhalt der .dly-Datei als String.
-
-        Returns:
-            pd.DataFrame: DataFrame mit den Spalten ["ID", "YEAR", "MONTH", "ELEMENT", "DAY_1", ..., "DAY_31"].
-        """
-    # Spaltennamen definieren
+    # Define columns for the DataFrame
     columns = ["ID", "YEAR", "MONTH", "ELEMENT"] + [f"DAY_{i}" for i in range(1, 32)]
     data = []
 
-    # Wir interessieren uns nur für TMIN und TMAX
     valid_elements = {"TMIN", "TMAX"}
 
-    # Für jeden Eintrag in der Datei
+    # Parse each line in the file content
     for line in file_content.splitlines():
-        # Sicherstellen, dass die Zeile lang genug ist
-        # Für 31 Tage: Startindex für DAY_31 = 21 + (30 * 8) = 21 + 240 = 261, plus 5 Zeichen = 266 (besser etwas großzügiger prüfen)
+        # Skip lines shorter than 269 characters
         if len(line) < 269:
-            continue  # Zeile überspringen, wenn zu kurz
+            continue
 
-        # Extrahiere das Element (Spalten 18-21)
+        # Extract element type and skip if not TMIN or TMAX
         element = line[17:21].strip()
         if element not in valid_elements:
             continue
@@ -43,13 +46,13 @@ def parse_dly_file(file_content):
             year = int(line[11:15].strip())
             month = int(line[15:17].strip())
         except ValueError:
-            continue  # Überspringe Zeile, falls Jahr oder Monat nicht konvertiert werden können
+            continue  # Skip line if year or month cannot be converted to integers
 
-        # Lese die 31 Tageswerte ein; jeder Tageswert befindet sich in einem 8-Zeichen-Block
+        # Parse 31 daily values (8-char blocks starting at character 22)
         values = []
         for i in range(31):
             start = 21 + (i * 8)
-            end = start + 5  # Die ersten 5 Zeichen enthalten den Wert
+            end = start + 5  # First 5 characters of each block are the value
             value_str = line[start:end].strip()
             if value_str == "-9999" or value_str == "":
                 values.append(None)
@@ -62,24 +65,3 @@ def parse_dly_file(file_content):
         data.append([station_id, year, month, element] + values)
 
     return pd.DataFrame(data, columns=columns)
-
-
-"""
-    # Kommentar fehlt noch
-    columns = ["ID", "YEAR", "MONTH", "ELEMENT"] + [f"DAY_{i}" for i in range(1, 32)]
-    data = []
-
-    for line in file_content.splitlines():
-        station_id = line[0:11].strip()
-        year = int(line[11:15].strip())
-        month = int(line[15:17].strip())
-        element = line[17:21].strip()
-
-        values = [
-            int(line[21 + (i * 8):26 + (i * 8)].strip()) if line[21 + (i * 8):26 + (i * 8)].strip() != "-9999" else None
-            for i in range(31)
-        ]
-        data.append([station_id, year, month, element] + values)
-
-    return pd.DataFrame(data, columns=columns)
-"""
