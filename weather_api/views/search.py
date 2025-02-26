@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from weather_api.utils.stations_loader import stations_cache
 from weather_api.utils.station_filters import filter_stations
 
@@ -24,34 +24,10 @@ class StationSearchView(APIView):
             OpenApiParameter(name="end_year", description="End year of data availability", required=True, type=int),
         ],
         responses={
-            200: {
-                "description": "A list of weather stations matching the search criteria.",
-                "examples": {
-                    "application/json": [
-                        {
-                            "station_id": "GME00129502",
-                            "name": "TUTTLINGEN",
-                            "latitude": 48.0092,
-                            "longitude": 8.8189,
-                            "distance": 1.74,
-                            "data_availability": {"first_year": 1991, "last_year": 2003}
-                        }
-                    ]
-                }
-            },
-            400: {
-                "description": "Invalid query parameters provided.",
-                "examples": {
-                    "application/json": {"error": "Invalid parameters"}
-                }
-            },
-            500: {
-                "description": "Internal server error due to missing station data.",
-                "examples": {
-                    "application/json": {"error": "Stations data not loaded"}
-                }
-            }
-        }
+            200: OpenApiResponse(description="A list of weather stations matching the search criteria."),
+            400: OpenApiResponse(description="Invalid query parameters provided."),
+            500: OpenApiResponse(description="Internal server error due to missing station data."),
+        },
     )
 
     def get(self, request):

@@ -4,11 +4,13 @@ Contains a function to build structured JSON responses with annual and seasonal 
 analysis API.
 """
 
+import pandas as pd
+
 def build_weather_data_response(annual_list, seasonal_list):
     """Build a structured JSON response with annual and seasonal temperature data.
 
     Combines annual and seasonal TMIN and TMAX data into a sorted list of yearly records, each containing annual means
-    and seasonal means for winter, spring, summer, and autumn.
+    and seasonal means for winter, spring, summer, and autumn. Converts NaN values to None for JSON compatibility.
 
     Args:
         annual_list (list[dict]): List of annual data entries, each with keys "YEAR" (int), "TMIN" (float or None),
@@ -30,8 +32,8 @@ def build_weather_data_response(annual_list, seasonal_list):
         years_dict[year] = {
             "year": year,
             "annual_means": {
-                "tmin": row["TMIN"],
-                "tmax": row["TMAX"]
+                "tmin": None if pd.isna(row["TMIN"]) else row["TMIN"],
+                "tmax": None if pd.isna(row["TMAX"]) else row["TMAX"]
             },
             "seasonal_means": {season: {"tmin": None, "tmax": None} for season in expected_seasons}
         }
@@ -41,9 +43,8 @@ def build_weather_data_response(annual_list, seasonal_list):
         season = row["season"]
         if year in years_dict and season in expected_seasons:
             years_dict[year]["seasonal_means"][season] = {
-                "tmin": row["TMIN"],
-                "tmax": row["TMAX"]
+                "tmin": None if pd.isna(row["TMIN"]) else row["TMIN"],
+                "tmax": None if pd.isna(row["TMAX"]) else row["TMAX"]
             }
-    years = [years_dict[y] for y in sorted(years_dict)]
 
-    return {"years": years}
+    return {"years": [years_dict[y] for y in sorted(years_dict)]}
