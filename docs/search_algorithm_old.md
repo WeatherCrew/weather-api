@@ -21,7 +21,7 @@ angegebenen Standort (angegeben durch Breiten- und Längengrad) befinden.
     - Haversine-Formel:
       - a = sin²(Δ*lat/2) + cos(lat1) ⋅ cos(lat2) ⋅ sin²(Δlon/2)
       - c = 2 ⋅ atan2( √a, √(1−a) )
-      - d = R ⋅ c (R ist der Erdradius(6371 km))
+      - d = R ⋅ c (R ist der Erdradius (6371 km))
     - Es gibt auch ein Python Modul namens `haversine` für die Berechnung der Distanz zwischen zwei Koordinaten.
     - Rückgabe der Distanz einer Wetterstation zum angegebenen Standort in Kilometern.
 

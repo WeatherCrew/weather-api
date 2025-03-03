@@ -4,9 +4,10 @@ This module provides functions to load station data from a CSV file and parse da
 and initializes a cached dictionary of station data with common availability periods for TMIN and TMAX elements. The
 initialized data is stored in `stations_cache`for access across the weather API.
 """
+import os
+from pathlib import Path
 
-
-def load_stations(file_path="weather_api/data/ghcnd-stations.csv"):
+def load_stations(file_path=None):
     """Load station data from a CSV file.
 
         Reads station information from a CSV file. The file is expected to have at least six comma-separated
@@ -20,7 +21,6 @@ def load_stations(file_path="weather_api/data/ghcnd-stations.csv"):
 
         Args:
             file_path (str): Path to the CSV file containing station data.
-                             Defaults to "weather_api/data/ghcnd-stations.csv".
 
         Returns:
             list[dict]: List of dictionaries, each representing a station with keys:
@@ -29,6 +29,8 @@ def load_stations(file_path="weather_api/data/ghcnd-stations.csv"):
         Raises:
             FileNotFoundError: If the file is not found.
     """
+    if file_path is None:
+        file_path = os.path.join(Path(__file__).resolve().parent.parent, "data", "ghcnd-stations.csv")
     stations = []
     try:
         with open(file_path, mode="r", encoding="utf-8") as file:
@@ -51,7 +53,7 @@ def load_stations(file_path="weather_api/data/ghcnd-stations.csv"):
     return stations
 
 
-def parse_inventory_file(file_path="weather_api/data/ghcnd-inventory.txt"):
+def parse_inventory_file(file_path=None):
     """Parse the inventory file and extract data availability information.
 
         Extracts the following details for each record:
@@ -60,19 +62,20 @@ def parse_inventory_file(file_path="weather_api/data/ghcnd-inventory.txt"):
           - First year: characters 36-40.
           - Last year: characters 41-45.
 
-        Only "TMIN" and "TMAX" elements are  stored in a nested dictionary per station.
+        Only "TMIN" and "TMAX" elements are stored in a nested dictionary per station.
 
         Args:
             file_path (str): Path to the inventory file.
-                             Defaults to "weather_api/data/ghcnd-inventory.txt".
 
         Returns:
             dict: Station IDs mapped to dictionaries with "TMIN" and "TMAX" keys, each containing "first_year" and
-            "last_year" vakues.
+            "last_year" values.
 
         Raises:
             FileNotFoundError: If the file is not found.
         """
+    if file_path is None:
+        file_path = os.path.join(Path(__file__).resolve().parent.parent, "data", "ghcnd-inventory.txt")
     inventory = {}
     try:
         with open(file_path, mode="r", encoding="utf-8") as file:
@@ -106,9 +109,6 @@ def get_common_availability(inventory, station_id):
 
         Returns:
             dict: Dictionary "first_year" and "last_year" keys for the common availability period.
-
-        Raises:
-            Noch error handling hinzufügen??
         """
     default_availability = {"first_year": None, "last_year": None}
 
@@ -116,7 +116,7 @@ def get_common_availability(inventory, station_id):
         return default_availability
 
     station_data = inventory[station_id]
-    tmin = station_data.get("TMIN") # kann man das ersetzen?
+    tmin = station_data.get("TMIN")
     tmax = station_data.get("TMAX")
 
     if tmin and tmax:
@@ -138,13 +138,9 @@ def initialize_station_data():
 
         Returns:
             dict: Station IDs mapped to dictionaries with station information and data availability.
-
-        Raises:
-            Noch error handling hinzufügen??
     """
-    # Load raw station data
-    stations_list = load_stations("weather_api/data/ghcnd-stations.csv")
-    inventory = parse_inventory_file("weather_api/data/ghcnd-inventory.txt")
+    stations_list = load_stations()
+    inventory = parse_inventory_file()
     stations = {}
 
     # Combine station metadata with availability data

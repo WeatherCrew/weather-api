@@ -23,7 +23,7 @@ def filter_stations(stations, latitude, longitude, radius, max_results, requeste
 
     Returns:
         list[dict]: Sorted list of stations (by distance, up to max_results), each with keys "station_id", "latitude",
-                    "longitude", "name", "data_availability" and "distance".
+                    "longitude", "name", "hemisphere", "data_availability" and "distance".
     """
     results = []
 

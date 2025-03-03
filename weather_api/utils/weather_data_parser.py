@@ -3,11 +3,12 @@
 Provides a function to parse weather data from .dly files for a given time period and extract TMIN and TMAX records
 into a DataFrame.
 """
-
 import pandas as pd
+from weather_api.utils.weather_data_downloader import download_dly_file
+
 
 def parse_dly_file(file_content, start_year, end_year):
-    """Parse the content of a .dly file to extract TMIN adn TMAX records between start_year - 1 and end_year.
+    """Parse the content of a .dly file to extract TMIN and TMAX records between start_year - 1 and end_year.
 
     Processes the file content line by line, extracting station ID, year, month and daily values for TMIN and TMAX.
     Each record includes:
@@ -79,3 +80,10 @@ def parse_dly_file(file_content, start_year, end_year):
         data.append([station_id, year, month, element] + values)
 
     return pd.DataFrame(data, columns=columns)
+
+from weather_api.utils.weather_data_downloader import download_dly_file
+
+if __name__ == "__main__":
+    file = download_dly_file("GME00129502")
+    parsed_file = parse_dly_file(file, 1991, 2003)
+    print(parsed_file)

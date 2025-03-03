@@ -3,8 +3,8 @@
 Contains a function to build structured JSON responses with annual and seasonal temperature data for the weather
 analysis API.
 """
-
 import pandas as pd
+
 
 def build_weather_data_response(annual_list, seasonal_list):
     """Build a structured JSON response with annual and seasonal temperature data.

@@ -36,10 +36,12 @@ def calculate_annual_means(preprocessed_data, start_year, end_year):
     Returns:
         pd.DataFrame: DataFrame with columns ["YEAR", "TMIN", "TMAX"].
     """
+    # Filter data to include only the specified years
     annual_data = preprocessed_data[(preprocessed_data["YEAR"] >= start_year) & (preprocessed_data["YEAR"] <= end_year)]
 
-    # add comments
+    # Group data by 'YEAR' and 'ELEMENT' and calculate the mean 'VALUE' for each group
     annual_means = annual_data.groupby(["YEAR", "ELEMENT"])["VALUE"].mean().unstack()
+    # Reset index to convert 'YEAR' from index back to a column
     annual_means = annual_means.reset_index()
 
     return annual_means
@@ -57,11 +59,12 @@ def calculate_seasonal_means(preprocessed_data, start_year, end_year, hemisphere
     Returns:
         pd.DataFrame: DataFrame with columns ["YEAR", "season", "TMIN", "TMAX"].
     """
-    # Vectorized season assignment
+    # Season mapping for Northern hemisphere
     season_map_north = {12: ("winter", 1), 1: ("winter", 0), 2: ("winter", 0),
                         3: ("spring", 0), 4: ("spring", 0), 5: ("spring", 0),
                         6: ("summer", 0), 7: ("summer", 0), 8: ("summer", 0),
                         9: ("autumn", 0), 10: ("autumn", 0), 11: ("autumn", 0)}
+    # Season mapping for Southern hemisphere
     season_map_south = {12: ("summer", 1), 1: ("summer", 0), 2: ("summer", 0),
                         3: ("autumn", 0), 4: ("autumn", 0), 5: ("autumn", 0),
                         6: ("winter", 0), 7: ("winter", 0), 8: ("winter", 0),
@@ -69,6 +72,7 @@ def calculate_seasonal_means(preprocessed_data, start_year, end_year, hemisphere
 
     season_map = season_map_south if hemisphere.upper() == "S" else season_map_north
 
+    # Map each month to its corresponding season and year
     preprocessed_data["season"], preprocessed_data["year_offset"] = zip(
         *preprocessed_data["MONTH"].map(lambda m: season_map.get(m, (None, 0)))
     )
@@ -82,5 +86,3 @@ def calculate_seasonal_means(preprocessed_data, start_year, end_year, hemisphere
     seasonal_means = seasonal_means.reset_index().rename(columns={"season_year": "YEAR"})
 
     return seasonal_means
-
-

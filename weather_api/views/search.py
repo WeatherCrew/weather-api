@@ -25,7 +25,7 @@ class StationSearchView(APIView):
         ],
         responses={
             200: OpenApiResponse(description="A list of weather stations matching the search criteria."),
-            400: OpenApiResponse(description="Invalid query parameters provided."),
+            400: OpenApiResponse(description="Invalid or missing query parameters provided."),
             500: OpenApiResponse(description="Internal server error due to missing station data."),
         },
     )
@@ -34,7 +34,7 @@ class StationSearchView(APIView):
         """Handles GET requests to search for weather stations.
 
         Extracts query parameters from the request, filter stations using the cached data, and returns the results as
-        a JSON response.
+        a JSON response, or an error response with an appropriate status code.
 
         Args:
             request (rest_framework.request.Request): The incoming HTTP request containing query parameters:
@@ -47,10 +47,6 @@ class StationSearchView(APIView):
 
         Returns:
             rest_framework.response.Response:JSON response with a list of matching stations.
-
-        Raises:
-            ValueError: If query parameters cannot be converted to the required types.
-            TypeError: If required query parameters are missing or invalid.
         """
         try:
             latitude = float(request.query_params.get("latitude"))

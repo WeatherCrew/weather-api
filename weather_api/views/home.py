@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 
 def home(request):
-    """Render the Weather API home page as a simple HTML response.
+    """Renders the Weather API home page as a simple HTML response.
 
     Returns an HTML page with links to the Swagger UI, API specification, and GitHub repository.
 

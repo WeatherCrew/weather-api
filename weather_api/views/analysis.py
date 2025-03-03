@@ -43,19 +43,19 @@ class StationAnalysisView(APIView):
                 - end_year (int): Last year of the analysis period.
 
         Returns:
-            rest_framework.response.Response: A JSON response containing annual and seasonal means for the station.
-
-        Raises:
-            ValueError: If start_year or end_year cannot be converted to integers or start_year > end_year.
-            TypeError: If required query parameters are missing or invalid.
+            rest_framework.response.Response: A JSON response containing annual and seasonal means for the station, or
+            an error response with an appropriate status code.
         """
         try:
             station_id = request.query_params.get("station_id")
-            start_year = int(request.query_params.get("start_year"))
-            end_year = int(request.query_params.get("end_year"))
+            start_year = request.query_params.get("start_year")
+            end_year = request.query_params.get("end_year")
 
             if not station_id or not start_year or not end_year:
                 return Response({"error": "Missing parameter(s)"}, status=400)
+
+            start_year = int(start_year)
+            end_year = int(end_year)
 
             if start_year > end_year:
                 return Response({"start_year must <= end_year"}, status=400)

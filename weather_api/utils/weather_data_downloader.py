@@ -25,7 +25,7 @@ def download_dly_file(station_id):
     file_url = f"{base_url}{station_id}.dly"
 
     try:
-        response = requests.get(file_url, timeout=5)
+        response = requests.get(file_url, timeout=5) # timeout set to 5 seconds
         response.raise_for_status()
         return response.text
     except requests.exceptions.Timeout:
