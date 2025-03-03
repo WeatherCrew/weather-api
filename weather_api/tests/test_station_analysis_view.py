@@ -5,6 +5,7 @@ from rest_framework.test import APIClient
 TEST_DATA_PATH_1 = os.path.join(os.path.dirname(__file__), "data", "GME00129502.dly.txt")
 TEST_DATA_PATH_2 = os.path.join(os.path.dirname(__file__), "data", "AR000087925.dly.txt")
 
+pytestmark = pytest.mark.view_tests
 
 @pytest.fixture
 def client():
