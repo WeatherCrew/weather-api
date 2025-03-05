@@ -44,6 +44,4 @@ docker run -p 8000:8000 ghcr.io/weathercrew/weather-api:latest
 
 API Documentation can be found at: [docs/api_documentation.md](docs/api_documentation.md) 
 To see the other part of the application, visit the [Frontend Repo](https://github.com/WeatherCrew/weather-ui)
-
-
-
+To start the entire application (API & UI), visit the [Weather-App Repo](https://github.com/WeatherCrew/weather-app)
