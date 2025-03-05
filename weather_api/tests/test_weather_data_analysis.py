@@ -8,7 +8,6 @@ from weather_api.utils.weather_data_parser import parse_dly_file
 from weather_api.utils.weather_data_analysis import preprocess_weather_data, calculate_annual_means, \
     calculate_seasonal_means
 
-pytestmark = pytest.mark.view_tests
 
 TEST_DATA_PATH_1 = os.path.join(os.path.dirname(__file__), "data", "GME00129502.dly.txt")
 

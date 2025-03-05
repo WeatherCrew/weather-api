@@ -25,9 +25,21 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run tests with pytest (excluding view tests
+    - name: Run non-view tests
       run: |
-        pytest weather_api/tests --maxfail=5 --disable-warnings -m "not view_tests"
+        pytest -v --maxfail=5 --disable-warnings -m "not (search_view or analysis_view or analysis_view_2 or analysis_view_3)"
+    - name: Run search view tests
+      run: |
+        pytest -v --maxfail=5 --disable-warnings -m "search_view"
+    - name: Run analysis view tests (general)
+      run: |
+        pytest -v --maxfail=5 --disable-warnings -m "analysis_view"
+    - name: Run analysis view tests (southern hemisphere)
+      run: |
+        pytest -v --maxfail=5 --disable-warnings -m "analysis_view_2"
+    - name: Run analysis view tests (download timeout)
+      run: |
+        pytest -v --maxfail=5 --disable-warnings -m "analysis_view_3"
 
   docker-build-and-push:
     needs: build-and-test

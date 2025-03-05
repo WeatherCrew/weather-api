@@ -1,3 +1,5 @@
+import os
+
 import pytest
 from weather_api.utils.stations_loader import stations_cache
 

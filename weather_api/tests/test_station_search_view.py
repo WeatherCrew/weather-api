@@ -3,7 +3,16 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from weather_api.utils.stations_loader import stations_cache
 
-pytestmark = pytest.mark.view_tests
+
+pytestmark = pytest.mark.search_view
+
+
+@pytest.fixture(autouse=True)
+def reset_stations_cache():
+    stations_cache.clear()
+    yield
+    stations_cache.clear()
+
 
 @pytest.fixture
 def api_client():
@@ -106,6 +115,7 @@ def test_station_search_invalid_types(api_client, mock_stations_cache):
 
 def test_station_search_empty_cache(api_client):
     """Test response when stations_cache is empty."""
+    # Wir setzen den Cache explizit auf leer:
     stations_cache["stations"] = {}
     url = reverse('station_search')
     params = {
@@ -120,7 +130,6 @@ def test_station_search_empty_cache(api_client):
 
     assert response.status_code == 500
     assert response.data == {"error": "Stations data not loaded"}
-
 
 def test_station_search_no_results(api_client, mock_stations_cache):
     """Test response when no stations are found within the radius."""
