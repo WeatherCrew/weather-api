@@ -113,7 +113,7 @@ Die GHCN-Datenquelle bietet verschiedene Dateien und Ordner mit Wetterdaten an:
 - `isd`: (nicht näher spezifiziert)-
 
 Eine Analyse der Dateien und Ordner ergab, dass nicht alle Dateien die in `ghcnd-inventory.txt` angegebenen Zeiträume oder Temperaturdaten (TMIN, TMAX) vollständig enthalten. Beispielsweise fehlen in `by_station`für
-Station `GME00129502` seit dem 26.01.2024 TMIN- und TMAX-Daten, obwohl sie am 25.01.2025 teilweise verfügbar waren, jedoch nicht für den gesamten angegebenen Zeitraum.
+Station `GME00129502` seit dem 26.01.2025 TMIN- und TMAX-Daten, obwohl sie am 25.01.2025 teilweise verfügbar waren, jedoch nicht für den gesamten angegebenen Zeitraum. Stand 08.03.2025 sind die Daten wieder verfügbar und nun auch für den gesamten Zeitraum abrufbar.
 
 Da der Benutzer der Anwendung eine Wetterstation auswählt, für die er Wetterdaten angezeigt bekommen möchte, eignet sich das Abrufen der Wetterdaten für die angegebene Wetterstation und nicht für mehrere/alle Wetterstationen.
 Daher ist der Ordner `all/` geeignet. Er enthält pro Station eine .dly-Datei mit vollständigen Daten über den gesamten Zeitraum.
