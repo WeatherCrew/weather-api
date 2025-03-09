@@ -105,14 +105,14 @@ Beschreibung der Variablen:
 Die GHCN-Datenquelle bietet verschiedene Dateien und Ordner mit Wetterdaten an:
 
 - `all`: .dly-Dateien mit Daten pro Station.
-- `by_station`: .csv.gz-Dateien pro Station (nicht immer vollständig).
+- `by_station`: .csv.gz-Dateien pro Station.
 - `by_year`: .csv.gz-Dateien pro Jahr für alle Stationen.
 - `grid`: Jährliche Temperaturanomalien in einem 3,75° x 2,5° Raster.
 - `gsn`: .dly-Dateien für GSN-Stationen.
 - `hcn`: .dly-Dateien für HCN-Stationen.
 - `isd`: (nicht näher spezifiziert)-
 
-Eine Analyse der Dateien und Ordner ergab, dass nicht alle Dateien die in `ghcnd-inventory.txt` angegebenen Zeiträume oder Temperaturdaten (TMIN, TMAX) vollständig enthalten. Beispielsweise fehlen in `by_station`für
+Eine Analyse der Dateien und Ordner ergab, dass nicht alle Dateien die in `ghcnd-inventory.txt` angegebenen Zeiträume enthalten oder vollständige Temperaturdaten (TMIN, TMAX) bereitstellen. Beispielsweise fehlen in `by_station`für die
 Station `GME00129502` seit dem 26.01.2025 TMIN- und TMAX-Daten, obwohl sie am 25.01.2025 teilweise verfügbar waren, jedoch nicht für den gesamten angegebenen Zeitraum. Stand 08.03.2025 sind die Daten wieder verfügbar und nun auch für den gesamten Zeitraum abrufbar.
 
 Da der Benutzer der Anwendung eine Wetterstation auswählt, für die er Wetterdaten angezeigt bekommen möchte, eignet sich das Abrufen der Wetterdaten für die angegebene Wetterstation und nicht für mehrere/alle Wetterstationen.
