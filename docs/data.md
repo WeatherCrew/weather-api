@@ -129,7 +129,6 @@ Beispielzeile aus einer .dly-Datei:
 - **-9999**: Keine Daten verfügbar (z. B. am 31. Tag im November)
 - **E**: Source Flag, das angibt, woher die Daten stammen
   - E: *European Climate Assessment & Dataset*
-  - a: *Australian data from the Australian Bureau of Meteorology*
 
 --- 
 
